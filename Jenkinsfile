@@ -1,23 +1,35 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'maven'
+    }
+
     stages {
 
-        stage('Connect') {
+        stage('Checkout') {
             steps {
-                echo 'Jenkins successfully connected to GitHub!'
+                git 'https://github.com/Hariharan-Laboratory/jenkins-cicd-demo.git'
             }
         }
 
-        stage('Checkout Code') {
+        stage('Build') {
             steps {
-                git branch: 'main', url: 'https://github.com/Hariharan-Laboratory/jenkins-cicd-demo.git'
+                sh 'mvn clean package'
             }
         }
 
-        stage('Build Test') {
+        stage('Deploy to Tomcat') {
             steps {
-                sh 'echo Build working...'
+                deploy adapters: [
+                    tomcat9(
+                        credentialsId: 'tomcat-user',
+                        path: '',
+                        url: 'http://host.docker.internal:9090'
+                    )
+                ],
+                contextPath: 'cicd-demo',
+                war: '**/*.war'
             }
         }
     }
