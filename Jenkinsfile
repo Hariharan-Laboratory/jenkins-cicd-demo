@@ -18,7 +18,7 @@ pipeline {
                 deploy adapters: [
                     tomcat9(
                         credentialsId: 'tomcat-user',
-                        url: 'http://host.docker.internal:9090'
+                        url: 'http://tomcat:8080'
                     )
                 ],
                 contextPath: 'cicd-demo',
