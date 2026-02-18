@@ -7,12 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Hariharan-Laboratory/jenkins-cicd-demo.git'
-            }
-        }
-
         stage('Build') {
             steps {
                 sh 'mvn clean package'
@@ -24,7 +18,6 @@ pipeline {
                 deploy adapters: [
                     tomcat9(
                         credentialsId: 'tomcat-user',
-                        path: '',
                         url: 'http://host.docker.internal:9090'
                     )
                 ],
